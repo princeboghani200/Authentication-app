@@ -9,10 +9,18 @@ const ACCESS_KEY = process.env.ACCESS_KEY;
 const bcrypt = require("bcrypt");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
+const cors = require("cors");
+
 
 const app = express();
 app.use(express.json());
 app.use(helmet());
+app.use(
+  cors({
+    origin: "http://localhost:3001", // adjust to match your actual frontend port
+    credentials: true,
+  }),
+);
 
 let refreshTokens = [];
 
@@ -76,7 +84,7 @@ app.post("/logout", (req, res) => {
 });
 
 app.get("/private", verifyToken, (req, res) => {
-  res.json({ message: `Wlcome ${req.userId}, This is private !` });
+  res.json({ message: `Welcome ${req.userId}, This is private !` });
 });
 
 app.listen(3000, () => {
